@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yun3008 — Art Portfolio &amp; Commissions</title>
+  <style>
+    :root {
+      --bg: oklch(97% 0.005 100);
+      --surface: oklch(100% 0 0);
+      --fg: oklch(12% 0.01 100);
+      --muted: oklch(45% 0.012 100);
+      --border: oklch(85% 0.006 100);
+      --accent: oklch(82% 0.16 95);
+      --accent-dark: oklch(65% 0.14 95);
+      --accent-soft: oklch(95% 0.04 95);
+      --black: oklch(10% 0.01 100);
+      --white: oklch(100% 0 0);
+      --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --radius: 4px;
+      --max-w: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── REVEAL SYSTEM ────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal.is-visible { opacity: 1; transform: none; }
+
+    .stagger-child {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: calc(var(--i, 0) * 80ms);
+      will-change: opacity, transform;
+    }
+    .stagger-child.is-visible { opacity: 1; transform: none; }
+
+    /* ─── NAV ───────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transform: translateY(-100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+    nav.is-visible { transform: translateY(0); }
+
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700; font-size: 1.2rem; letter-spacing: -0.02em; color: var(--black);
+    }
+    .nav-logo span { color: var(--accent-dark); }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--muted); transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--black); }
+
+    /* ─── HERO ──────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 120px 32px 80px;
+      background: var(--black); color: var(--white);
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+      background: linear-gradient(to top, var(--bg), transparent);
+    }
+    .hero-inner { text-align: center; max-width: 700px; position: relative; z-index: 1; }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700; letter-spacing: -0.04em; line-height: 1.05;
+      margin-bottom: 24px; color: var(--white);
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.6);
+      max-width: 480px; margin: 0 auto 40px; line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px;
+      background: var(--accent); color: var(--black);
+      font-weight: 600; font-size: 0.9rem; letter-spacing: 0.04em; text-transform: uppercase;
+      border-radius: var(--radius);
+      transition: background 0.2s ease, transform 0.2s ease; will-change: transform;
+    }
+    .hero-cta:hover { background: var(--accent-dark); transform: translateY(-2px); }
+
+    /* ─── SECTIONS ──────────────────────────────── */
+    section { padding: 100px 32px; max-width: var(--max-w); margin: 0 auto; }
+
+    .section-label {
+      font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent-dark); margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; letter-spacing: -0.03em; margin-bottom: 16px; line-height: 1.1;
+    }
+    .section-desc { color: var(--muted); max-width: 520px; margin-bottom: 48px; font-size: 1rem; line-height: 1.7; }
+
+    /* ─── GALLERY ───────────────────────────────── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 220px;
+      gap: 16px;
+    }
+    .gallery-item {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      cursor: pointer; transform: translateZ(0); will-change: transform;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-item .overlay {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 24px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      color: var(--white); opacity: 0; transform: translateY(12px);
+      transition: opacity 0.35s ease, transform 0.35s ease; will-change: opacity, transform;
+    }
+    .gallery-item:hover .overlay { opacity: 1; transform: translateY(0); }
+    .overlay h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; margin-bottom: 4px; }
+    .overlay p { font-size: 0.8rem; opacity: 0.7; }
+
+    /* 5-image editorial layout */
+    .gallery-item:nth-child(1) { grid-column: span 7; grid-row: span 2; }
+    .gallery-item:nth-child(2) { grid-column: span 5; grid-row: span 1; }
+    .gallery-item:nth-child(3) { grid-column: span 5; grid-row: span 1; }
+    .gallery-item:nth-child(4) { grid-column: span 4; grid-row: span 1; }
+    .gallery-item:nth-child(5) { grid-column: span 8; grid-row: span 1; }
+
+    /* ─── PRICING TABLE ────────────────────────── */
+    .pricing {
+      background: var(--black); color: var(--white); margin: 0; max-width: 100%; padding: 100px 32px;
+    }
+    .pricing.light { background: var(--bg); color: var(--fg); }
+
+    .pricing-inner { max-width: var(--max-w); margin: 0 auto; }
+    .pricing .section-label { color: var(--accent); }
+    .pricing .section-desc { color: rgba(255,255,255,0.5); }
+    .pricing.light .section-desc { color: var(--muted); }
+
+    .pricing-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+    .pricing-table thead th {
+      text-align: left; padding: 16px 20px;
+      font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .pricing.light .pricing-table thead th { border-bottom-color: var(--border); }
+
+    .pricing-table tbody td {
+      padding: 18px 20px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.8); vertical-align: top;
+    }
+    .pricing.light .pricing-table tbody td { border-bottom-color: var(--border); color: var(--fg); }
+
+    .pricing-table tbody tr:hover td { background: rgba(255,255,255,0.03); }
+    .pricing.light .pricing-table tbody tr:hover td { background: rgba(0,0,0,0.02); }
+
+    .pricing-table .price-cell {
+      font-family: var(--font-display); font-weight: 700; font-size: 1.05rem;
+      color: var(--white); white-space: nowrap;
+    }
+    .pricing.light .pricing-table .price-cell { color: var(--black); }
+
+    .pricing-table .note-cell { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+    .pricing.light .pricing-table .note-cell { color: var(--muted); }
+
+    .pricing-table .category-header td {
+      padding: 28px 20px 12px;
+      font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
+      color: var(--accent); border-bottom: 2px solid var(--accent); letter-spacing: 0.02em;
+    }
+
+    .pricing-table .sub-row td:first-child {
+      padding-left: 40px; color: rgba(255,255,255,0.65);
+    }
+    .pricing.light .pricing-table .sub-row td:first-child { color: var(--muted); }
+
+    .pricing-table .sub-row td:first-child::before { content: '↳ '; opacity: 0.4; }
+
+    .pricing-note {
+      margin-top: 40px; padding: 24px 28px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius); font-size: 0.85rem; line-height: 1.7; color: rgba(255,255,255,0.55);
+    }
+    .pricing.light .pricing-note {
+      background: var(--surface); border-color: var(--border); color: var(--muted);
+    }
+    .pricing-note strong { color: rgba(255,255,255,0.8); font-weight: 600; }
+    .pricing.light .pricing-note strong { color: var(--black); }
+    .pricing-note .highlight { color: var(--accent); }
+
+    /* ─── RULES ─────────────────────────────────── */
+    .rules {
+      margin-top: 48px; padding: 40px;
+      background: var(--accent-soft); border: 1px solid var(--accent);
+      border-radius: var(--radius); max-width: 700px;
+    }
+    .rules h3 {
+      font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
+      margin-bottom: 20px; color: var(--black);
+    }
+    .rules-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .rules-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 0.9rem; line-height: 1.6; color: var(--fg);
+    }
+    .rules-list li::before { content: '→'; color: var(--accent-dark); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .rules-list strong { font-weight: 600; color: var(--black); }
+
+    .no-go { margin-top: 24px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .no-go h4 { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; color: oklch(30% 0.15 25); }
+    .no-go-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .no-go-tags span {
+      padding: 6px 14px; background: oklch(95% 0.02 25); color: oklch(30% 0.12 25);
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      border-radius: 999px; border: 1px solid oklch(85% 0.04 25);
+    }
+
+    /* ─── CONTACT / SOCIAL ──────────────────────── */
+    .contact { text-align: center; padding: 100px 32px; }
+    .contact .section-desc { margin-left: auto; margin-right: auto; }
+
+    .social-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 28px; border: 1px solid var(--border);
+      border-radius: var(--radius); font-weight: 500; font-size: 0.9rem;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+    .social-btn:hover { border-color: var(--black); background: var(--surface); transform: translateY(-2px); }
+    .social-btn .icon { font-size: 1.1rem; }
+
+    .social-btn.instagram {
+      background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      color: var(--white); border-color: transparent;
+    }
+    .social-btn.instagram:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .social-btn.reddit { background: #ff4500; color: var(--white); border-color: #ff4500; }
+    .social-btn.reddit:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .social-btn.twitter { background: var(--black); color: var(--white); border-color: var(--black); }
+    .social-btn.twitter:hover { background: oklch(20% 0.01 100); border-color: oklch(20% 0.01 100); transform: translateY(-2px); }
+
+    /* ─── LIGHTBOX ──────────────────────────────── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.92); align-items: center; justify-content: center; padding: 32px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: var(--radius);
+      transform: scale(0.92); opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+    .lightbox.active img { transform: scale(1); opacity: 1; }
+
+    .lightbox-close {
+      position: fixed; top: 24px; right: 32px; font-size: 2rem;
+      color: rgba(255,255,255,0.6); cursor: pointer; background: none; border: none;
+      transition: color 0.2s ease;
+    }
+    .lightbox-close:hover { color: var(--white); }
+
+    /* ─── REDUCED MOTION ────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal, .stagger-child { opacity: 1 !important; transform: none !important; }
+      nav { transform: translateY(0) !important; }
+    }
+
+    /* ─── RESPONSIVE ────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 0.75rem; }
+      .gallery {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 200px;
+        gap: 12px;
+      }
+      .gallery-item:nth-child(1) { grid-column: span 1; grid-row: span 2; }
+      .gallery-item:nth-child(2) { grid-column: span 1; grid-row: span 1; }
+      .gallery-item:nth-child(3) { grid-column: span 1; grid-row: span 1; }
+      .gallery-item:nth-child(4) { grid-column: span 1; grid-row: span 1; }
+      .gallery-item:nth-child(5) { grid-column: span 1; grid-row: span 1; }
+      .pricing-table { font-size: 0.8rem; }
+      .pricing-table thead th, .pricing-table tbody td { padding: 12px 10px; }
+      .rules { padding: 28px; }
+      section, .pricing { padding: 60px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .social-links { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">Yun<span style="color: rgb(0, 0, 0);">3008</span></a>
+      <ul class="nav-links">
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#commissions">Rules</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <h1>Yun3008</h1>
+      <p class="subtitle reveal">Digital art &amp; illustrations. Open for commissions. Original characters, portraits, and creative concepts.</p>
+      <a href="#pricing" class="hero-cta reveal">See Pricing ↓</a>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="section-label reveal">01 — Selected Works</div>
+    <h2 class="section-title reveal">Portfolio</h2>
+
+    <div class="gallery" id="gallery">
+      <div class="gallery-item stagger-child" style="--i:0" onclick="openLightbox(this)">
+        <img src="mquyexpm-Solli_e_Fe.png" alt="Artwork 1 — Portrait study" loading="lazy">
+        <div class="overlay"><h3>Two full body with a starry sky background</h3><p></p></div>
+      </div>
+      <div class="gallery-item stagger-child" style="--i:1" onclick="openLightbox(this)">
+        <img src="mquyfa90-stef-motorino.jpg" alt="Artwork 2 — Character design" loading="lazy">
+        <div class="overlay"><h3>Full body of a guy on a small motorcycle</h3><p></p></div>
+      </div>
+      <div class="gallery-item stagger-child" style="--i:2" onclick="openLightbox(this)">
+        <img src="mquyfyyx-stef-bubble-tea.jpg" alt="Artwork 3 — Atmospheric scene" loading="lazy">
+        <div class="overlay"><h3>Bust of a guy drinking a bubble tea</h3><p></p></div>
+      </div>
+      <div class="gallery-item stagger-child" style="--i:3" onclick="openLightbox(this)">
+        <img src="mquyfq6e-stef-e-phere-inverno.jpg" alt="Artwork 4 — Abstract composition" loading="lazy">
+        <div class="overlay"><h3>Busts of two people outside</h3><p></p></div>
+      </div>
+      <div class="gallery-item stagger-child" style="--i:4" onclick="openLightbox(this)">
+        <img src="mquyfhoa-stef-e-phere-danza.png" alt="Artwork 5 — Fan illustration" loading="lazy">
+        <div class="overlay"><h3>Two busts in dynamic poses while dancing</h3><p></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <div class="pricing" id="pricing">
+    <div class="pricing-inner">
+      <div class="section-label reveal">02 — Price List</div>
+      <h2 class="section-title reveal" style="color:var(--white);">Pricing</h2>
+      <p class="section-desc reveal">Base prices for commissions. Final price is agreed privately based on complexity. Providing references, palettes, or extra details may lower the cost.</p>
+
+      <div style="overflow-x:auto;">
+        <table class="pricing-table reveal">
+          <thead>
+            <tr><th>Type</th><th>Description</th><th>Price</th></tr>
+          </thead>
+          <tbody>
+            <!-- SKETCH -->
+            <tr class="category-header"><td colspan="3">Simple sketch (draft without lineart, without colors, without background)</td></tr>
+            <tr>
+              <td>Simple sketch</td>
+              <td class="note-cell">Draft without lineart, without colors, without background</td>
+              <td class="price-cell">€3</td>
+            </tr>
+
+            <!-- LINEART -->
+            <tr class="category-header"><td colspan="3">LINEART ONLY. NO COLOR, NO BACKGROUND</td></tr>
+            <tr>
+              <td>Head only</td>
+              <td class="note-cell">Head. Clean lineart, no color, no background</td>
+              <td class="price-cell">€5</td>
+            </tr>
+            <tr class="sub-row">
+              <td>Bust</td>
+              <td class="note-cell">Bust. +30% for each additional person in the drawing</td>
+              <td class="price-cell">€10</td>
+            </tr>
+            <tr class="sub-row">
+              <td>Full body</td>
+              <td class="note-cell">Full body. +30% for each additional person in the drawing</td>
+              <td class="price-cell">€15</td>
+            </tr>
+
+            <!-- COLOR -->
+            <tr class="category-header"><td colspan="3">COLOR</td></tr>
+            <tr class="sub-row">
+              <td>Good and fairly rendered</td>
+              <td class="note-cell">Added to lineart base price</td>
+              <td class="price-cell">+€5</td>
+            </tr>
+
+            <!-- BACKGROUND -->
+            <tr class="category-header"><td colspan="3">BACKGROUND</td></tr>
+            <tr class="sub-row">
+              <td>Background</td>
+              <td class="note-cell">Price depends on complexity</td>
+              <td class="price-cell">+€7 / 10 / 15</td>
+            </tr>
+
+            <!-- REVISIONS -->
+            <tr class="category-header"><td colspan="3">REVISIONS</td></tr>
+            <tr class="sub-row">
+              <td>Per revision</td>
+              <td class="note-cell">Price depends on the scope of changes</td>
+              <td class="price-cell">+€0.50 / 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pricing-note reveal">
+        <strong>Note:</strong> The prices listed are <span class="highlight">NOT absolute, but only indicative</span>. Final prices will be agreed upon privately with any applicable adjustments. By providing references, a color palette, or other additional details, prices <span class="highlight">COULD decrease</span>.<br><br>
+        <strong>Non-human subjects</strong> (creatures, objects, abstract concepts) are also available. Pricing for these is decided privately once the request has been provided (along with all relevant descriptions).
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMISSIONS / RULES -->
+  <div class="pricing light" id="commissions">
+    <div class="pricing-inner">
+      <div class="section-label reveal">03 — Commission Rules</div>
+      <h2 class="section-title reveal">How It Works</h2>
+      <p class="section-desc reveal">The process, payment terms, and what I won't draw.</p>
+
+      <div class="rules reveal">
+        <h3>Rules</h3>
+        <ul class="rules-list">
+          <li><strong>Payment:</strong> A non-refundable deposit is required upfront before any work begins. Once the price is agreed, you pay the deposit to secure your slot.</li>
+          <li><strong>Proof of completion:</strong> Once the piece is finished, I'll send you a watermarked preview as proof. After the remaining balance is paid in full, you receive the full-resolution, unwatermarked file.</li>
+          <li><strong>Revisions:</strong> Approximately 5 free revisions per piece. Additional or major revisions beyond that will be charged based on scope (+€0.50 / €1 per revision, depends).</li>
+          <li><strong>Commercial use:</strong> For any commercial purpose, credit (e.g. social media tag, link in description) is required as a minimum.</li>
+        </ul>
+
+        <div class="no-go">
+          <h4>Will NOT draw:</h4>
+          <div class="no-go-tags">
+            <span>Mecha</span><span>NSFW</span><span>Furry</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT / SOCIAL -->
+  <section class="contact" id="contact">
+    <div class="section-label reveal">04 — Get in touch</div>
+    <h2 class="section-title reveal">Contact &amp; Socials</h2>
+    <p class="section-desc reveal">Interested in a commission or have a question? Reach out through any of the methods below. I typically respond within 48 hours.</p>
+
+    <div class="social-links">
+      <a href="https://www.instagram.com/yunnn3008" target="_blank" rel="noopener" class="social-btn instagram reveal">
+        <span class="icon">📷</span> Instagram
+      </a>
+      <a href="https://www.reddit.com/user/Yunnn3008/" target="_blank" rel="noopener" class="social-btn reddit reveal">
+        <span class="icon">👽</span> Reddit
+      </a>
+      <a href="https://x.com/Yunnn3008" target="_blank" rel="noopener" class="social-btn twitter reveal">
+        <span class="icon">𝕏</span> X (Twitter)
+      </a>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox(event)">×</button>
+    <img id="lightbox-img" src="" alt="Enlarged artwork">
+  </div>
+
+  <script>
+    // ── Reveal on scroll ──────────────────────────
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal, .stagger-child, .hero-cta').forEach(el => io.observe(el));
+
+    // ── Nav reveal ────────────────────────────────
+    const nav = document.getElementById('main-nav');
+    setTimeout(() => nav.classList.add('is-visible'), 700);
+    if (window.scrollY > 80) nav.classList.add('is-visible');
+
+    // ── Stagger gallery ───────────────────────────
+    const galleryIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.stagger-child').forEach(c => galleryIO.observe(c));
+          galleryIO.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    const g = document.getElementById('gallery');
+    if (g) galleryIO.observe(g);
+
+    // ── Lightbox ──────────────────────────────────
+    function openLightbox(item) {
+      const img = item.querySelector('img');
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightbox-img');
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lb.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(e) {
+      if (e) e.stopPropagation();
+      const lb = document.getElementById('lightbox');
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+    // ── Smooth scroll for nav links ───────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href');
+        if (id.length > 1) {
+          e.preventDefault();
+          const tgt = document.querySelector(id);
+          if (tgt) tgt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+
+</body></html>
